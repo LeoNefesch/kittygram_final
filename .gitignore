@@ -139,6 +139,7 @@ dmypy.json
 
 .vscode/
 *.code-workspace
+.vscode
 
 # Local History for Visual Studio Code
 .history/
@@ -147,6 +148,15 @@ dmypy.json
 
 # папки со статикой и медиа
 media/
+.media
 
 # Others
 node_modules
+/node_modules
+/.pnp
+.pnp.js
+**/node_modules
+node_modules/
+/build
+build
+build/

@@ -16,7 +16,6 @@ Makefile
 .pnp.js
 node_modules
 **/node_modules
-*/node_modules
 node_modules/
 media/
 .media
@@ -24,14 +23,3 @@ media/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
-build/
-build
-/build
-**/build
-.cache
-npm-debug.log
-**/npm-debug.log
-**/.editorconfig
-**/.aws
-**/dist
-.npmrc
