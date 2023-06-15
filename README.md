@@ -46,7 +46,7 @@ POSTGRES_PASSWORD=<пароль_пользователя_БД>
 POSTGRES_DB=<имя_БД>
 DB_HOST: 127.0.0.1
 DB_PORT: 5432
-SECRET_KEY=<сгенерированный_ключ_для_джанго>
+SECRET_KEY=<django-insecure-сгенерированный_на_https://djecrety.ir/_ключ_для_джанго>
 ALLOWED_HOSTS=<список_используемых_доменных_имён_и_IP_адресов>
 PORT_NGINX=<порт_на_который_пойдут_все_запросы_в_Docker>
 
