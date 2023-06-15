@@ -38,6 +38,12 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+При активированном виртуальном окружении установить пакет gunicorn:
+
+```
+pip install gunicorn==20.1.0
+```
+
 Выполнить миграции:
 
 ```
@@ -47,5 +53,5 @@ python3 manage.py migrate
 Запустить проект:
 
 ```
-python3 manage.py runserver
+gunicorn --bind 0.0.0.0:9000 kittygram_backend.wsgi
 ```
