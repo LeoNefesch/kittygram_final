@@ -1,26 +1,172 @@
-#  Как работать с репозиторием финального задания
+### О чём проект?
+##### Проект написан с применением контейнеризации.
+##### Представляет из себя соцсеть со следующими возможностями:
+ - регистрация пользователя;
+ - добавление, редактирование и удаление пользователем изображений котиков;
+ - также для каждого котика можно указать одно или несколько достижений;
+ - посмотреть на котиков других пользователей.
 
-## Что нужно сделать
+ **Стэк технологий:**
+ - терминал Linux;
+ - Python;
+ - Django;
+ - djangorestframework;
+ - djoser;
+ - Pillow;
+ - gunicorn;
+ - nginx;
+ - Docker;
+ - GitHub Actions;
+ - PostgreSQL
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+**Польза проекта**
+- наглядный пример контейнеризации;
+- иллюстрация возможностей авторизованных и неавторизованных пользователей;
 
-## Как проверить работу с помощью автотестов
+### Как запустить проект:
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+Клонировать репозиторий:
+
+```
+git clone git@github.com:LeoNefesch/kittygram_final.git
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+##### В головной директории проекта создать файл с переменными окружения
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+```
+cd kittygram_final/
+touch .env
+nano .env
+```
+###### Файл .env должен содержать следующие переменные:
 
-## Чек-лист для проверки перед отправкой задания
+```
+POSTGRES_USER=<пользователь_БД>
+POSTGRES_PASSWORD=<пароль_пользователя_БД>
+POSTGRES_DB=<имя_БД>
+DB_HOST: 127.0.0.1
+DB_PORT: 5432
+SECRET_KEY=<сгенерированный_ключ_для_джанго>
+ALLOWED_HOSTS=<список_используемых_доменных_имён_и_IP_адресов>
+PORT_NGINX=<порт_на_который_пойдут_все_запросы_в_Docker>
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+```
+##### Установка Docker
+
+```
+sudo apt update
+```
+```
+sudo apt install curl
+```
+```
+curl -fSL https://get.docker.com -o get-docker.sh
+```
+```
+sudo sh ./get-docker.sh
+```
+##### Установка утилиты Docker Compose
+
+```
+sudo apt-get install docker-compose-plugin
+```
+##### Убедитесь, что докер запущен
+
+```
+sudo service docker status
+```
+##### В директории kittygram_final/backend создать и активировать виртуальное окружение:
+
+```
+python3 -m venv venv
+```
+
+* Если у вас Linux/macOS
+
+    ```
+    source venv/bin/activate
+    ```
+    или
+    ```
+    . venv/bin/activate
+    ```
+
+* Если у вас windows
+
+    ```
+    source venv/scripts/activate
+    ```
+
+Обновить pip:
+
+```
+python3 -m pip install --upgrade pip
+```
+
+Установить flake:
+
+```
+pip install flake8==6.0.0 flake8-isort==6.0.0
+```
+
+Создать в головной директории файл setup.cfg (для исключений flake'а) с содержимым:
+
+```
+[flake8]
+ignore =
+    I001,
+    I003, 
+    W503,
+    F811
+exclude = 
+    tests/,
+    */migrations/,
+    venv/,
+    */venv/,
+    env/
+    */env/,
+per-file-ignores =
+    */settings.py:E501
+```
+
+Запустить проверку flake'ом из головной директории и убедиться, что локально все тесты пройдены.
+   
+##### Стягиваем образы для проекта с DockerHub
+
+```
+sudo docker compose -f docker-compose.production.yml pull
+```
+
+##### Останавливаем работающие контейнеры
+
+```
+sudo docker compose -f docker-compose.production.yml down
+```
+
+##### Запускаем контейнеры в фоне
+
+```
+sudo docker compose -f docker-compose.production.yml up -d
+```
+
+##### Выполняем миграции
+
+```
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+```
+
+##### Собираем статику бэкенда
+
+```
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+```
+
+##### Копируем статику в директорию, связанную с volume static
+
+```
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collect_static/. /static_backend/static/
+```
+
+
+### Проект выполнил студент Яндекс Практикума
+### [Леонид Негашев](https://github.com/LeoNefesch/)
