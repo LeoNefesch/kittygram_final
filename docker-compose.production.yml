@@ -28,6 +28,7 @@ services:
   gateway:
     image: leonefesch/kittygram_gateway
     env_file: .env
+    restart: on-failure
     ports:
       - 9000:80
     volumes:
