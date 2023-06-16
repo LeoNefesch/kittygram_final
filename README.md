@@ -25,7 +25,7 @@
 
 ### Как запустить проект:
 
-Клонировать репозиторий:
+##### Клонировать репозиторий:
 
 ```
 git clone git@github.com:LeoNefesch/kittygram_final.git
@@ -38,7 +38,7 @@ cd kittygram_final/
 touch .env
 nano .env
 ```
-###### Файл .env должен содержать следующие переменные:
+Файл .env должен содержать следующие переменные:
 
 ```
 POSTGRES_USER=<пользователь_БД>
@@ -131,42 +131,78 @@ per-file-ignores =
 
 Запустить проверку flake'ом из головной директории и убедиться, что локально все тесты пройдены.
    
-##### Стягиваем образы для проекта с DockerHub
+##### Стянуть образы для проекта с DockerHub
 
 ```
 sudo docker compose -f docker-compose.production.yml pull
 ```
 
-##### Останавливаем работающие контейнеры
+##### Остановить работающие контейнеры
 
 ```
 sudo docker compose -f docker-compose.production.yml down
 ```
 
-##### Запускаем контейнеры в фоне
+##### Запустить контейнеры в фоне
 
 ```
 sudo docker compose -f docker-compose.production.yml up -d
 ```
 
-##### Выполняем миграции
+##### Выполнить миграции
 
 ```
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
 ```
 
-##### Собираем статику бэкенда
+##### Собрать статику бэкенда
 
 ```
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
 ```
 
-##### Копируем статику в директорию, связанную с volume static
+##### Скопировать статику в директорию, связанную с volume static
 
 ```
 sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collect_static/. /static_backend/static/
 ```
 
+#### Установить и настроить nginx
+
+##### Установить и запустить nginx
+
+```
+sudo apt install nginx -y
+sudo systemctl start nginx
+```
+
+##### Настроить firewall
+
+```
+sudo ufw allow 'Nginx Full'
+sudo ufw allow OpenSSH
+sudo ufw enable
+```
+
+##### Установить следующие настройки для nginx
+
+```
+sudo nano /etc/nginx/sites-enabled/default
+```
+
+```
+server {
+    listen 80;
+    server_name <IP-адрес рабочего сервера ли доменное имя>;
+    
+    location / {
+        proxy_set_header HOST $host;
+        proxy_pass http://127.0.0.1:<порт_на_который_пойдут_все_запросы_в_Docker>;
+
+    }
+}
+
+```
 
 ### Проект выполнил студент Яндекс Практикума
 ### [Леонид Негашев](https://github.com/LeoNefesch/)
