@@ -23,6 +23,7 @@ services:
     env_file: .env
     build: ./frontend/
     command: cp -r /app/build/. /static/
+    restart: no
     volumes:
       - static:/static
   gateway:
